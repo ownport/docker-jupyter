@@ -2,6 +2,10 @@
 
 set -eu
 
+source /etc/profile.d/conda.sh
+
+IP_ADDR=$(hostname -i)
+
 if [ -e apk-requirements.txt ]; then
 	apk add --no-cache $(cat apk-requirements.txt) 
 fi
@@ -11,20 +15,15 @@ if [ -e py3-requirements.txt ]; then
 fi
 
 case ${1} in
-    app:start)        
-        echo "[INFO] Running application in production mode"
-        nginx && uwsgi --master --ini /etc/flask-app.ini
-        ;;
-    app:debug)        
-        echo "[WARNING] Running application in debug mode"
-        python3 /app/main.py
+    notebook:start)        
+        echo "[INFO] Running Jupyter notebook"
+        jupyter notebook --ip ${IP_ADDR}
         ;;
     help)
         echo 'Available options:'
-        echo ' app:start    - Application start'
-        echo ' app:debug    - Application start in debug mode'
-        echo ' help         - Displays the help'
-        echo ' [command]    - Execute the specified command, eg. bash.'
+        echo ' notebook:start   - Jupyter Notebook start'
+        echo ' help             - Displays the help'
+        echo ' [command]        - Execute the specified command, eg. bash.'
         ;;
     *)
         exec "$@"
