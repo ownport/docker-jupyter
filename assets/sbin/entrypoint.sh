@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -eu
 
@@ -6,18 +6,34 @@ source /etc/profile.d/conda.sh
 
 IP_ADDR=$(hostname -i)
 
-if [ -e apk-requirements.txt ]; then
-	apk add --no-cache $(cat apk-requirements.txt) 
+
+if [ -e apk-packages.req ]; then
+    echo '[INFO] Install additional Alpine packages' && \
+	apk add --no-cache $(cat apk-packages.req) 
 fi
 
-if [ -e py3-requirements.txt ]; then
-	pip2 install -r py3-requirements.txt
+if [ -e conda-packages.req ]; then
+    echo '[INFO] Install additional Conda packages' && \
+	conda install -r conda-packages.req
+fi
+
+
+USER_ID=${HOST_USERID:=}
+GROUP_ID=${HOST_GROUPID:=}
+
+if [ ! -z "${USER_ID}" -a ! -z "${GROUP_ID}" ]; then
+    PWD_LINE=$(grep -F "jupyter" /etc/passwd)
+    FIELDS=( ${PWD_LINE//:/ } )
+    USER_HOME=${FIELDS[5]}
+    sed -i -e "s/^jupyter:\([^:]*\):[0-9]*:[0-9]*/jupyter:\1:${USER_ID}:${GROUP_ID}/"  /etc/passwd
+    sed -i -e "s/^jupyter:\([^:]*\):[0-9]*/jupyter:\1:${GROUP_ID}/"  /etc/group
+    chown -R ${USER_ID}:${GROUP_ID} ${USER_HOME}
 fi
 
 case ${1} in
     notebook:start)        
         echo "[INFO] Running Jupyter notebook"
-        jupyter notebook --ip ${IP_ADDR}
+        su -c "jupyter notebook --ip ${IP_ADDR}" -s /bin/bash jupyter
         ;;
     help)
         echo 'Available options:'

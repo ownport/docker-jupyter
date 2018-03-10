@@ -28,3 +28,29 @@ to run bash session
 ```sh
 docker run -ti --rm --name conda ownport/jupyter:latest /bin/bash
 ```
+
+## Extra features
+
+### How to mount the volume to docker container
+```sh
+$ docker run -ti --rm --name jupyter-notebook -v $(pwd):/data ownport/jupyter:latest notebook:start
+```
+to setup user id
+```sh
+$ docker run -ti --rm --name jupyter-notebook \
+        -e HOST_USERID=1000 \
+        -e HOST_GROUPID=1000 \
+        -v $(pwd):/data \
+        ownport/jupyter:latest \
+        notebook:start
+```
+
+### How to install additional packages
+
+to install additional packages during a container start, add these packages as simple list into the next files:
+
+- `apk-packages.req`: for Alpine packages
+- `conda-packages.req`: for Conda packages
+
+
+

@@ -1,9 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 source /etc/profile.d/conda.sh
 
-echo '[INFO] Creating jupyter user' && \
-    adduser -S jupyter
+echo '[INFO] Creating jupyter user and group' && \
+    addgroup -S jupyter && \
+    adduser -S jupyter -G jupyter -g jupyter_user && \
+    chown -R jupyter:jupyter /data
 
 echo '[INFO] Install Jupyter' && \
     conda install jupyter

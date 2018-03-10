@@ -5,6 +5,6 @@ COPY assets/ /tmp/assets/
 RUN echo '[INFO] Configure environment' && \
     /tmp/assets/sbin/install.sh 
 
-USER jupyter
+# USER jupyter
 WORKDIR /data        
 ENTRYPOINT ["/sbin/entrypoint.sh"]
