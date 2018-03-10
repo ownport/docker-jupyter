@@ -2,6 +2,9 @@
 
 source /etc/profile.d/conda.sh
 
+echo '[INFO] Creating jupyter user' && \
+    adduser -S jupyter
+
 echo '[INFO] Install Jupyter' && \
     conda install jupyter
 
