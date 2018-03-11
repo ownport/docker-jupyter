@@ -8,7 +8,7 @@ echo '[INFO] Creating jupyter user and group' && \
     chown -R jupyter:jupyter /data
 
 echo '[INFO] Install Jupyter' && \
-    conda install jupyter
+    conda install --yes jupyter
 
 echo '[INFO] Update scripts and configs' && \
     mv /tmp/assets/sbin/entrypoint.sh /sbin
