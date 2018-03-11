@@ -14,7 +14,7 @@ fi
 
 if [ -e conda-packages.req ]; then
     echo '[INFO] Install additional Conda packages' && \
-	conda install -r conda-packages.req
+	conda install --yes --file conda-packages.req
 fi
 
 
